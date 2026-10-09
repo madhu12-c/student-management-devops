@@ -1,5 +1,9 @@
 """Student Management System: stores and manages student records."""
 
+import re
+
+EMAIL_PATTERN = re.compile(r"^[\w.+-]+@[\w-]+(\.[\w-]+)+$")
+
 
 class Student:
     """A single student record."""
@@ -22,6 +26,13 @@ def validate_student(student):
         raise ValueError("Student name cannot be empty")
     if not student.course or not student.course.strip():
         raise ValueError("Course cannot be empty")
+    if not is_valid_email(student.email):
+        raise ValueError(f"Invalid email address: {student.email!r}")
+
+
+def is_valid_email(email):
+    """Return True if the email looks like name@domain.tld."""
+    return bool(email) and EMAIL_PATTERN.match(email) is not None
 
 
 class StudentManager:
