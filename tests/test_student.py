@@ -1,6 +1,6 @@
 import pytest
 
-from student import Student, StudentManager
+from student import Student, StudentManager, is_valid_email
 
 
 @pytest.fixture
@@ -52,3 +52,15 @@ def test_invalid_student_rejected(manager, roll_no, name, course):
     with pytest.raises(ValueError):
         manager.add_student(Student(roll_no, name, "aman.verma@vcet.edu.in", course))
     assert manager.count() == 2
+
+
+@pytest.mark.parametrize("email", ["aarav.sharma@vcet.edu.in", "neha_j+lab@gmail.com"])
+def test_valid_emails(email):
+    assert is_valid_email(email)
+
+
+@pytest.mark.parametrize("email", ["", "neha.joshi", "neha@", "@vcet.edu.in", "neha joshi@vcet.in"])
+def test_invalid_email_rejected(manager, email):
+    assert not is_valid_email(email)
+    with pytest.raises(ValueError):
+        manager.add_student(Student(8, "Neha Joshi", email, "IT"))
