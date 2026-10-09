@@ -40,3 +40,15 @@ def test_remove_missing_student_raises(manager):
 def test_list_students_sorted_by_roll_no(manager):
     manager.add_student(Student(5, "Neha Joshi", "neha.joshi@vcet.edu.in", "IT"))
     assert [s.roll_no for s in manager.list_students()] == [1, 2, 5]
+
+
+@pytest.mark.parametrize("roll_no, name, course", [
+    (0, "Aman Verma", "IT"),
+    (-4, "Aman Verma", "IT"),
+    (7, "   ", "IT"),
+    (7, "Aman Verma", ""),
+])
+def test_invalid_student_rejected(manager, roll_no, name, course):
+    with pytest.raises(ValueError):
+        manager.add_student(Student(roll_no, name, "aman.verma@vcet.edu.in", course))
+    assert manager.count() == 2

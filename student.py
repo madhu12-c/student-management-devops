@@ -14,6 +14,16 @@ class Student:
         return f"Student({self.roll_no}, {self.name!r}, {self.email!r}, {self.course!r})"
 
 
+def validate_student(student):
+    """Check the required fields of a student record before it is stored."""
+    if not isinstance(student.roll_no, int) or student.roll_no <= 0:
+        raise ValueError("Roll number must be a positive integer")
+    if not student.name or not student.name.strip():
+        raise ValueError("Student name cannot be empty")
+    if not student.course or not student.course.strip():
+        raise ValueError("Course cannot be empty")
+
+
 class StudentManager:
     """Keeps student records in memory, indexed by roll number."""
 
@@ -21,6 +31,7 @@ class StudentManager:
         self.students = {}
 
     def add_student(self, student):
+        validate_student(student)
         if student.roll_no in self.students:
             raise ValueError(f"Student with roll no {student.roll_no} already exists")
         self.students[student.roll_no] = student
